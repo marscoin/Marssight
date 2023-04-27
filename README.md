@@ -1,11 +1,11 @@
 # *Marssight*
 
-*Marssight* is an open-source Marscoin blockchain explorer with complete REST and websocket APIs based on Litesight.
-Litesight runs in NodeJS, uses AngularJS for the front-end and LevelDB for storage.
+*Marssight* is an open-source Marscoin blockchain explorer with complete REST and websocket APIs based on Marssight.
+Marssight runs in NodeJS, uses AngularJS for the front-end and LevelDB for storage.
 
 For a live version see [Marscoin explorer's homepage](http://explore.marscoin.org/).
 
-*Marssight* project is now split in two repositories. One for the [API](https://github.com/marscoin/Litesight-api)
+*Marssight* project is now split in two repositories. One for the [API](https://github.com/marscoin/Marssight-api)
 and for the front-end. This repository is for the front-end, which will install the API as a NPM dependency.
 
 
@@ -19,9 +19,9 @@ and for the front-end. This repository is for the front-end, which will install 
 ## Quick Install
   Check the Prerequisites section above before installing.
 
-  To install litesight, clone the main repository:
+  To install Marssight, clone the main repository:
 
-    $ git clone https://github.com/marscoin/Litesight.git && cd Litesight
+    $ git clone https://github.com/marscoin/Marssight.git && cd Marssight
 
   Install dependencies:
 
@@ -35,8 +35,8 @@ and for the front-end. This repository is for the front-end, which will install 
 
     http://localhost:3000
 
-  If *litesight* reports problems connecting to **litecoind** please check the CONFIGURATION section of 
-  [litesight-api README](https://github.com/marscoin/Litesight-api/blob/master/README.md). To set the 
+  If *Marssight* reports problems connecting to **marscoind** please check the CONFIGURATION section of 
+  [Marssight-api README](https://github.com/marscoin/Marssight-api/blob/master/README.md). To set the 
   environment variables run something like:
   
      $ INSIGHT_NETWORK=livenet BITCOIND_USER=user BITCOIND_PASS=pass INSIGHT_PUBLIC_PATH=public  npm start
@@ -45,17 +45,17 @@ and for the front-end. This repository is for the front-end, which will install 
   Please note that the app will need to sync its internal database
   with the blockchain state, which may take some time. You can check
   sync progress from within the web interface. More details about that process
-  on [litesight-api README](https://github.com/marscoin/Litesight-api/blob/master/README.md). 
+  on [Marssight-api README](https://github.com/marscoin/Marssight-api/blob/master/README.md). 
   
   
 ## Nginx Setup
 
-To use Nginx as a reverse proxy for litesight, use the following base [configuration](https://gist.github.com/matiu/bdd5e55ff0ad90b54261)
+To use Nginx as a reverse proxy for Marssight, use the following base [configuration](https://gist.github.com/matiu/bdd5e55ff0ad90b54261)
 
 
 ## Development
 
-To run litesight locally for development mode:
+To run Marssight locally for development mode:
 
 Install bower dependencies:
 
@@ -75,36 +75,36 @@ There is a convenient Gruntfile.js for automation during editing the code
 $ grunt
 ```
 
-In case you are developing *litesight* and *litesight-api* together, you can do the following:
+In case you are developing *Marssight* and *Marssight-api* together, you can do the following:
 
-* Install litesight and litesight-api on the same path ($IROOT)
+* Install Marssight and Marssight-api on the same path ($IROOT)
 
 ```
-  $ cd $IROOT/Litesight
+  $ cd $IROOT/Marssight
   $ grunt
 ```
 
 in other terminal:
 
 ```
-  $ cd $IROOT/litesight-api
-  $ ln -s ../Litesight/public
+  $ cd $IROOT/Marssight-api
+  $ ln -s ../Marssight/public
   $ INSIGHT_PUBLIC_PATH=public node insight.js 
 ```
 
 
 ``` 
-INSIGHT_PUBLIC_PATH=Litesight/public  grunt
+INSIGHT_PUBLIC_PATH=Marssight/public  grunt
 ```
 
-at litesight-api's home path (edit the path according your setup).
+at Marssight-api's home path (edit the path according your setup).
 
-**also** in the Litesight-api path. (So you will have to grunt process running, one for litesight and one for litesight-api).
+**also** in the Marssight-api path. (So you will have to grunt process running, one for Marssight and one for Marssight-api).
 
 
 ## Multilanguage support
 
-litesight use [angular-gettext](http://angular-gettext.rocketeer.be) for
+Marssight use [angular-gettext](http://angular-gettext.rocketeer.be) for
 multilanguage support. 
 
 To enable a text to be translated, add the ***translate*** directive to html tags. See more details [here](http://angular-gettext.rocketeer.be/dev-guide/annotate/). Then, run:
@@ -131,11 +131,11 @@ compile***.
 
 ## Note
 
-For more details about the *litesight-api* configs and end-point, just go to [litesight-api github repository](https://github.com/marscoin/litesight-api) or read the [documentation](https://github.com/marscoin/Litesight-api/blob/master/README.md)
+For more details about the *Marssight-api* configs and end-point, just go to [Marssight-api github repository](https://github.com/marscoin/Marssight-api) or read the [documentation](https://github.com/marscoin/Litesight-api/blob/master/README.md)
 
 ## Contribute
 
-Contributions and suggestions are welcomed at [litesight github repository](https://github.com/marscoin/Litesight).
+Contributions and suggestions are welcomed at [Marssight github repository](https://github.com/marscoin/Marssight).
 
 
 ## License
