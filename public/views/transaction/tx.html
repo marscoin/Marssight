@@ -176,6 +176,12 @@
                 <span class="col-md-11 text-muted ellipsis">{{vout.scriptPubKey.asm}}</span>
                 <span class="btn-copy col-md-1" clip-copy="vout.scriptPubKey.asm"></span>
               </div>
+	      <div data-ng-If="vout.scriptPubKey.type == 'nulldata'">
+  			<div style="border-color: red; border-style: solid; padding: 10px; border-radius: 5px;height: 100px;margin-top:40px;">
+				<p class="small">	{{vout.OPRETURN}}				</p>
+				<a target="_blank" href="{{vout.OPRETURN_IPFSLINK}}" data-ng-show="vout.OPRETURN_IPFSLINK != ''">IPFS Link</a>
+    			</div>
+		</div>
           </div>
         </div>
         <div class="text-right">
