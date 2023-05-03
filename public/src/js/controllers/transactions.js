@@ -88,6 +88,45 @@ function($scope, $rootScope, $routeParams, $location, Global, Transaction, Trans
     });
   };
 
+  var _hexToAscii = function(hex){
+    var hex  = hex.toString();
+    var str = '';
+    for (var n = 0; n < hex.length; n += 2) {
+    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+  };
+
+  var _dectag = function(decoded){
+   var new_string = "";
+           parts = decoded.split("_");
+           if(parts.length > 1){
+                   if(parts[0] == "test"){
+                           new_string += "TEST: ";
+                   }else if(parts[0] == "GP"){
+                           new_string += "General Martian Public Member: ";
+                    }else if(parts[0] == "CT"){
+                      new_string += "Martian Citizen: ";
+                    }else if(parts[0] == "PR"){
+                      new_string += "Proposal: ";
+                    }else{
+                            new_string += parts[0];
+                    }
+            }
+            return new_string;
+  };
+       
+var _ipfsfy = function(decoded){
+  var ipfs_link = "";
+  parts = decoded.split("_");
+  if(parts.length > 1){
+
+  ipfs_link = "https://ipfs.marscoin.org/ipfs/"+parts[1];
+    return ipfs_link;
+  }
+  return "missing";
+  };
+
   var _byBlock = function() {
     TransactionsByBlock.get({
       block: $routeParams.blockHash,

@@ -6,13 +6,13 @@
     "name": "novalis78",
     "email": "novalis78@gmail.com"
   },
-  "repository": "git://github.com/marscoin/Marssight.git",
+  "repository": "git@github.com:marscoin/Marssight.git",
   "contributors": [
     {
       "name": "SS",
       "email": "flappy@flappycoin.io"
     },
-   {
+    {
       "name": "pembo210",
       "email": "pembo210@gmail.com"
     }
@@ -34,19 +34,19 @@
     "start": "INSIGHT_PUBLIC_PATH=public node node_modules/.bin/Marssight-api"
   },
   "dependencies": {
-    "Litesight-api": "git://github.com/marscoin/Marssight-api.git"
+    "marssight-api": "*"
   },
   "devDependencies": {
-    "bower": "~1.8.8",
-    "grunt": "~0.4.2",
-    "grunt-cli": "~0.1.11",
-    "grunt-contrib-jshint": "~0.8.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-uglify": "~0.3.2",
+    "bower": "*",
+    "grunt": "^1.6.1",
+    "grunt-angular-gettext": "*",
+    "grunt-cli": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
+    "grunt-css": "*",
     "grunt-macreload": "*",
-    "grunt-css": "~0.5.4",
-    "grunt-markdown": "~0.5.0",
-    "grunt-angular-gettext": "^0.2.15"
+    "grunt-markdown": "*"
   }
 }

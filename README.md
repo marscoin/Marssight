@@ -11,7 +11,7 @@ and for the front-end. This repository is for the front-end, which will install 
 
 ## Prerequisites
 
-* **Node.js v0.10.x** - Download and Install [Node.js](http://www.nodejs.org/download/).
+* **Node.js** - Download and Install [Node.js](http://www.nodejs.org/download/).
 
 * **NPM** - Node.js package manager, should be automatically installed when you get Node.js.
 
@@ -56,6 +56,12 @@ To use Nginx as a reverse proxy for Marssight, use the following base [configura
 ## Development
 
 To run Marssight locally for development mode:
+
+Install grunt
+
+```
+npm install grunt -g --prefix=~.npm
+```
 
 Install bower dependencies:
 
