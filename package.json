@@ -31,10 +31,10 @@
     "front-end"
   ],
   "scripts": {
-    "start": "INSIGHT_PUBLIC_PATH=public node node_modules/.bin/Marssight-api"
+    "start": "INSIGHT_PUBLIC_PATH=public node node_modules/.bin/marssight-api"
   },
   "dependencies": {
-    "marssight-api": "*"
+    "marssight-api": "git://git@github.com:marscoin/Marssight-api.git"
   },
   "devDependencies": {
     "bower": "*",
