@@ -1,167 +1,229 @@
-# *Marssight*
+# Marssight - Marscoin® Blockchain Explorer
 
-*Marssight* is an open-source Marscoin blockchain explorer with complete REST and websocket APIs based on Marssight.
-Marssight runs in NodeJS, uses AngularJS for the front-end and LevelDB for storage.
+<div align="center">
 
-For a live version see [Marscoin explorer's homepage](http://explore.marscoin.org/).
+![Marssight](https://img.shields.io/badge/Marscoin-Blockchain%20Explorer-orange?style=for-the-badge)
+![Node.js](https://img.shields.io/badge/Node.js-24+-green?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18+-blue?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-*Marssight* project is now split in two repositories. One for the [API](https://github.com/marscoin/Marssight-api)
-and for the front-end. This repository is for the front-end, which will install the API as a NPM dependency.
+**The official blockchain explorer for Marscoin® - the cryptocurrency designed for Mars colonization**
 
+[Live Explorer](https://explore1.marscoin.org) • [Marscoin.org](https://www.marscoin.org) • [API Documentation](#api-endpoints)
+
+</div>
+
+---
+
+## Screenshot
+
+![Marssight Explorer](docs/images/hero.png)
+
+---
+
+## Overview
+
+Marssight is a modern, open-source blockchain explorer for the Marscoin network. Built with a beautiful space-themed UI featuring a 3D rotating Mars globe, real-time block updates, and comprehensive blockchain data visualization.
+
+### Features
+
+- **3D Mars Globe** - Interactive Three.js rendered Mars with real NASA texture
+- **Real-time Updates** - WebSocket-powered live block and transaction feeds
+- **Modern UI** - Glassmorphism design with space-themed aesthetics
+- **Full API** - Complete REST API for blockchain data
+- **Price Integration** - Live Marscoin price data from CoinMarketCap
+- **Responsive** - Mobile-friendly design
+- **Fast Sync** - Optimized RPC-based blockchain synchronization
+
+## Tech Stack
+
+### Frontend
+- **React 18** with TypeScript
+- **Vite 7** for blazing fast builds
+- **Tailwind CSS v4** for styling
+- **Three.js** with React Three Fiber for 3D graphics
+- **React Query** for data fetching
+- **Lucide React** for icons
+
+### Backend
+- **Node.js 24** (pure JavaScript modules)
+- **Express.js** REST API
+- **LevelDB** for indexed blockchain data
+- **Socket.IO** for real-time updates
 
 ## Prerequisites
 
-* **Node.js** - Download and Install [Node.js](http://www.nodejs.org/download/).
+- **Node.js 24+** - Required for ES modules and modern JavaScript features
+- **npm 11+** - Comes with Node.js 24
+- **Marscoin Core** - Running full node with RPC enabled
 
-* **NPM** - Node.js package manager, should be automatically installed when you get Node.js.
+### Marscoin Node Configuration
 
+Ensure your `~/.marscoin/marscoin.conf` has:
 
-## Quick Install
-  Check the Prerequisites section above before installing.
+```conf
+rpcuser=marscoinrpc
+rpcpassword=your_secure_password
+rpcport=9981
+rpcallowip=127.0.0.1
+txindex=1
+```
 
-  To install Marssight, clone the main repository:
+## Quick Start
 
-    $ git clone https://github.com/marscoin/Marssight.git && cd Marssight
+### 1. Clone the repository
 
-  Install dependencies:
+```bash
+git clone https://github.com/novalis78/marssightup.git
+cd marssightup
+```
 
-    $ npm install
-    
-  Run the main application:
+### 2. Install dependencies
 
-    $ npm start
-    
-  Then open a browser and go to:
+```bash
+# Backend dependencies
+npm install
 
-    http://localhost:3000
+# Frontend dependencies
+cd frontend && npm install && cd ..
+```
 
-  If *Marssight* reports problems connecting to **marscoind** please check the CONFIGURATION section of 
-  [Marssight-api README](https://github.com/marscoin/Marssight-api/blob/master/README.md). To set the 
-  environment variables run something like:
-  
-     $ INSIGHT_NETWORK=livenet BITCOIND_USER=user BITCOIND_PASS=pass INSIGHT_PUBLIC_PATH=public  npm start
+### 3. Start the backend API
 
+```bash
+INSIGHT_NETWORK=livenet \
+BITCOIND_PASS=your_rpc_password \
+INSIGHT_FORCE_RPC_SYNC=true \
+node node_modules/Litesight-bitcore-api/insight.js
+```
 
-  Please note that the app will need to sync its internal database
-  with the blockchain state, which may take some time. You can check
-  sync progress from within the web interface. More details about that process
-  on [Marssight-api README](https://github.com/marscoin/Marssight-api/blob/master/README.md). 
-  
-  
-## Nginx Setup
+### 4. Start the frontend (in another terminal)
 
-To use Nginx as a reverse proxy for Marssight, use the following base [configuration](https://gist.github.com/matiu/bdd5e55ff0ad90b54261)
+```bash
+cd frontend
+npm run dev
+```
 
+### 5. Open your browser
+
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:4005
+
+## Environment Variables
+
+### Backend
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `INSIGHT_NETWORK` | Network mode (`livenet` or `testnet`) | `testnet` |
+| `INSIGHT_PORT` | API server port | `4005` (livenet), `4006` (testnet) |
+| `BITCOIND_USER` | RPC username | `marscoinrpc` |
+| `BITCOIND_PASS` | RPC password | - |
+| `BITCOIND_HOST` | RPC host | `127.0.0.1` |
+| `BITCOIND_PORT` | RPC port | `9981` (livenet), `18338` (testnet) |
+| `INSIGHT_FORCE_RPC_SYNC` | Force RPC sync mode | `false` |
+
+### Frontend
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_API_URL` | Backend API URL | `/api` (proxied) |
+
+## API Endpoints
+
+### Blocks
+
+```
+GET /api/block/:hash          # Get block by hash
+GET /api/block-index/:height  # Get block hash by height
+GET /api/blocks               # Get blocks list
+```
+
+### Transactions
+
+```
+GET /api/tx/:txid             # Get transaction by ID
+GET /api/txs                  # Get transactions list
+GET /api/rawtx/:txid          # Get raw transaction
+```
+
+### Addresses
+
+```
+GET /api/addr/:address        # Get address info
+GET /api/addr/:address/utxo   # Get address UTXOs
+GET /api/addr/:address/balance # Get address balance
+```
+
+### Status
+
+```
+GET /api/sync                 # Get sync status
+GET /api/status               # Get node status
+GET /api/peer                 # Get peer info
+```
 
 ## Development
 
-To run Marssight locally for development mode:
+### Frontend Development
 
-Install grunt
-
-```
-npm install grunt -g --prefix=~.npm
-```
-
-Install bower dependencies:
-
-```
-$ bower install
+```bash
+cd frontend
+npm run dev     # Start dev server with hot reload
+npm run build   # Build for production
+npm run lint    # Run ESLint
 ```
 
-To compile and minify the web application's assets:
+### Project Structure
 
 ```
-$ grunt compile
+marssightup/
+├── frontend/                 # React frontend
+│   ├── src/
+│   │   ├── components/       # React components
+│   │   ├── pages/            # Page components
+│   │   ├── services/         # API services
+│   │   ├── hooks/            # Custom hooks
+│   │   └── lib/              # Utilities
+│   └── public/               # Static assets
+├── node_modules/
+│   └── Litesight-bitcore-api/ # Backend API
+├── docs/
+│   └── images/               # Documentation images
+└── README.md
 ```
 
-There is a convenient Gruntfile.js for automation during editing the code
+## Contributing
 
-```
-$ grunt
-```
+We welcome contributions! Please follow these steps:
 
-In case you are developing *Marssight* and *Marssight-api* together, you can do the following:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-* Install Marssight and Marssight-api on the same path ($IROOT)
+## About Marscoin®
 
-```
-  $ cd $IROOT/Marssight
-  $ grunt
-```
+Marscoin is a cryptocurrency designed for the future settlement of Mars. Established in 2014, it serves as a testbed for blockchain technology that could facilitate Martian commerce and governance.
 
-in other terminal:
+- **Algorithm**: Scrypt
+- **Block Time**: ~2 minutes
+- **Merged Mining**: Yes (with Litecoin)
+- **Difficulty**: ASERT (Aserti3-2d)
 
-```
-  $ cd $IROOT/Marssight-api
-  $ ln -s ../Marssight/public
-  $ INSIGHT_PUBLIC_PATH=public node insight.js 
-```
-
-
-``` 
-INSIGHT_PUBLIC_PATH=Marssight/public  grunt
-```
-
-at Marssight-api's home path (edit the path according your setup).
-
-**also** in the Marssight-api path. (So you will have to grunt process running, one for Marssight and one for Marssight-api).
-
-
-## Multilanguage support
-
-Marssight use [angular-gettext](http://angular-gettext.rocketeer.be) for
-multilanguage support. 
-
-To enable a text to be translated, add the ***translate*** directive to html tags. See more details [here](http://angular-gettext.rocketeer.be/dev-guide/annotate/). Then, run:
-
-```
-grunt compile
-```
-
-This action will create a template.pot file in ***po/*** folder. You can open
-it with some PO editor ([Poedit](http://poedit.net)). Read this [guide](http://angular-gettext.rocketeer.be/dev-guide/translate/) to learn how to edit/update/import PO files from a generated POT file. PO file will be generated inside po/ folder.
-
-If you make new changes, simply run **grunt compile** again to generate a new .pot template and the angular javascript ***js/translations.js***. Then (if use Poedit), open .po file and choose ***update from POT File*** from **Catalog** menu.
-
-Finally changes your default language from ***public/src/js/config*** 
-
-```
-gettextCatalog.currentLanguage = 'es';
-```
-
-This line will take a look at any *.po files inside ***po/*** folder, e.g.
-**po/es.po**, **po/nl.po**. After any change do not forget to run ***grunt
-compile***.
-
-
-## Note
-
-For more details about the *Marssight-api* configs and end-point, just go to [Marssight-api github repository](https://github.com/marscoin/Marssight-api) or read the [documentation](https://github.com/marscoin/Litesight-api/blob/master/README.md)
-
-## Contribute
-
-Contributions and suggestions are welcomed at [Marssight github repository](https://github.com/marscoin/Marssight).
-
+Learn more at [marscoin.org](https://www.marscoin.org)
 
 ## License
-(The MIT License)
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+MIT License - see [LICENSE](LICENSE) for details.
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+---
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+<div align="center">
+
+Built with ❤️ for Mars
+
+*"Wake up and do something that excites you" - Elon Musk*
+
+</div>

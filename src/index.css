@@ -1,0 +1,415 @@
+@import "tailwindcss";
+
+@config "../tailwind.config.js";
+@source "../index.html";
+@source "./**/*.{js,ts,jsx,tsx}";
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 6%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 12 76% 61%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 12 76% 61%;
+
+    --radius: 0.75rem;
+
+    /* Mars colors */
+    --mars-orange: 12 76% 61%;
+    --mars-red: 0 70% 50%;
+    --mars-glow: 12 100% 65%;
+    --space-deep: 230 50% 5%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: radial-gradient(ellipse at top, hsl(230 50% 8%) 0%, hsl(230 50% 3%) 50%, hsl(230 50% 2%) 100%);
+    color: hsl(var(--foreground));
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* ========== GLASSMORPHISM CARDS ========== */
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ========== MARS GLOW EFFECTS ========== */
+.mars-glow {
+  box-shadow:
+    0 0 20px hsl(12 76% 61% / 0.3),
+    0 0 40px hsl(12 76% 61% / 0.15),
+    0 0 60px hsl(12 76% 61% / 0.1);
+}
+
+.mars-glow-intense {
+  box-shadow:
+    0 0 30px hsl(12 76% 61% / 0.5),
+    0 0 60px hsl(12 76% 61% / 0.3),
+    0 0 100px hsl(12 76% 61% / 0.2);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 30px hsl(12 76% 61% / 0.5),
+      0 0 60px hsl(12 76% 61% / 0.3),
+      0 0 100px hsl(12 76% 61% / 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 40px hsl(12 76% 61% / 0.6),
+      0 0 80px hsl(12 76% 61% / 0.4),
+      0 0 120px hsl(12 76% 61% / 0.25);
+  }
+}
+
+/* ========== HERO GRADIENT ========== */
+.mars-hero-gradient {
+  background: linear-gradient(
+    135deg,
+    hsl(12 76% 25% / 0.4) 0%,
+    hsl(12 76% 15% / 0.3) 25%,
+    hsl(230 50% 8% / 0.5) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.mars-hero-gradient::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    ellipse at center,
+    hsl(12 76% 61% / 0.1) 0%,
+    transparent 50%
+  );
+  animation: rotate-gradient 20s linear infinite;
+}
+
+@keyframes rotate-gradient {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========== STAT CARD SPECIAL ========== */
+.stat-card-primary {
+  background: linear-gradient(
+    135deg,
+    hsl(12 76% 30% / 0.6) 0%,
+    hsl(12 76% 20% / 0.4) 50%,
+    hsl(12 76% 15% / 0.3) 100%
+  );
+  border: 1px solid hsl(12 76% 61% / 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+/* ========== ANIMATED BORDERS ========== */
+.animated-border {
+  position: relative;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              linear-gradient(135deg, hsl(12 76% 61% / 0.5), transparent 50%, hsl(12 76% 61% / 0.5)) border-box;
+  border: 1px solid transparent;
+}
+
+/* ========== FLOATING ANIMATION ========== */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ========== PRICE TICKER ========== */
+.price-up {
+  color: #22c55e;
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
+
+.price-down {
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+/* ========== TRANSACTION ANIMATIONS ========== */
+.tx-enter {
+  animation: slideInGlow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInGlow {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+    box-shadow: 0 0 20px hsl(12 76% 61% / 0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    box-shadow: none;
+  }
+}
+
+/* ========== BLOCK PULSE ========== */
+.block-new {
+  animation: blockPulse 1.5s ease-out;
+}
+
+@keyframes blockPulse {
+  0% {
+    box-shadow: 0 0 0 0 hsl(12 76% 61% / 0.8);
+    transform: scale(1.02);
+  }
+  50% {
+    box-shadow: 0 0 0 15px hsl(12 76% 61% / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(12 76% 61% / 0);
+    transform: scale(1);
+  }
+}
+
+/* ========== NUMBER COUNTER ========== */
+.number-glow {
+  background: linear-gradient(135deg, #fff 0%, hsl(12 76% 80%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px hsl(12 76% 61% / 0.5));
+}
+
+/* ========== CUSTOM SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, hsl(12 76% 50%) 0%, hsl(12 76% 35%) 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, hsl(12 76% 60%) 0%, hsl(12 76% 45%) 100%);
+}
+
+/* ========== CHART ENHANCEMENTS ========== */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(255, 255, 255, 0.05) !important;
+}
+
+.recharts-tooltip-wrapper {
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5));
+}
+
+/* ========== NAVIGATION GLOW ========== */
+.nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(12 76% 61%), transparent);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ========== BUTTON ENHANCEMENTS ========== */
+.btn-mars {
+  background: linear-gradient(135deg, hsl(12 76% 55%) 0%, hsl(12 76% 45%) 100%);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-mars::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-mars:hover::before {
+  left: 100%;
+}
+
+.btn-mars:hover {
+  box-shadow: 0 0 30px hsl(12 76% 61% / 0.5);
+  transform: translateY(-2px);
+}
+
+/* ========== MARS PLANET ========== */
+.mars-planet {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, hsl(12 60% 50%) 0%, hsl(12 70% 35%) 50%, hsl(12 80% 25%) 100%);
+  box-shadow:
+    inset -20px -20px 40px rgba(0, 0, 0, 0.4),
+    inset 10px 10px 20px rgba(255, 200, 150, 0.1),
+    0 0 60px hsl(12 76% 50% / 0.3),
+    0 0 100px hsl(12 76% 50% / 0.2);
+  position: relative;
+  animation: float 8s ease-in-out infinite;
+}
+
+.mars-planet::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 60% 20%, rgba(255, 200, 150, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 80%, rgba(100, 50, 30, 0.3) 0%, transparent 30%);
+}
+
+/* ========== SECTION TITLES ========== */
+.section-title {
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, hsl(12 76% 61%), transparent);
+  border-radius: 2px;
+}
+
+/* ========== LOADING STATES ========== */
+.skeleton-glow {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shine 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shine {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ========== BADGE ENHANCEMENTS ========== */
+.badge-glow-green {
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+.badge-glow-red {
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.badge-glow-orange {
+  box-shadow: 0 0 10px hsl(12 76% 61% / 0.4);
+}
