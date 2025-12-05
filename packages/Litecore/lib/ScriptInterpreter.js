@@ -97,7 +97,7 @@ ScriptInterpreter.prototype.eval = function eval(script, tx, inIndex, hashType, 
       } else if (exec || (Opcode.map.OP_IF <= opcode && opcode <= Opcode.map.OP_ENDIF))
         switch (opcode) {
           case Opcode.map.OP_0:
-            this.stack.push(new Buffer([]));
+            this.stack.push(Buffer.alloc(0));
             break;
 
           case Opcode.map.OP_1NEGATE:
@@ -371,7 +371,7 @@ ScriptInterpreter.prototype.eval = function eval(script, tx, inIndex, hashType, 
             var v2 = this.stackTop(1);
             this.stackPop();
             this.stackPop();
-            var out = new Buffer(Math.max(v1.length, v2.length));
+            var out = Buffer.alloc(Math.max(v1.length, v2.length));
             if (opcode === Opcode.map.OP_AND) {
               for (var i = 0, l = out.length; i < l; i++) {
                 out[i] = v1[i] & v2[i];
@@ -405,7 +405,7 @@ ScriptInterpreter.prototype.eval = function eval(script, tx, inIndex, hashType, 
 
             this.stackPop();
             this.stackPop();
-            this.stack.push(new Buffer([value ? 1 : 0]));
+            this.stack.push(Buffer.from([value ? 1 : 0]));
             if (opcode === Opcode.map.OP_EQUALVERIFY) {
               if (value) {
                 this.stackPop();
@@ -616,7 +616,7 @@ ScriptInterpreter.prototype.eval = function eval(script, tx, inIndex, hashType, 
             scriptCode.findAndDelete(sig);
 
             // check canonical signature
-            this.isCanonicalSignature(new Buffer(sig));
+            this.isCanonicalSignature(Buffer.from(sig));
 
             // Verify signature
             checkSig(sig, pubkey, scriptCode, tx, inIndex, hashType, function(e, result) {
@@ -633,7 +633,7 @@ ScriptInterpreter.prototype.eval = function eval(script, tx, inIndex, hashType, 
               // Update stack
               this.stackPop();
               this.stackPop();
-              this.stack.push(new Buffer([success ? 1 : 0]));
+              this.stack.push(Buffer.from([success ? 1 : 0]));
               if (opcode === Opcode.map.OP_CHECKSIGVERIFY) {
                 if (success) {
                   this.stackPop();
@@ -690,7 +690,7 @@ ScriptInterpreter.prototype.eval = function eval(script, tx, inIndex, hashType, 
             var that = this;
             sigs.forEach(function(sig) {
               // check each signature is canonical
-              that.isCanonicalSignature(new Buffer(sig));
+              that.isCanonicalSignature(Buffer.from(sig));
               // Drop the signatures for the subscript, since a signature can't sign itself
               scriptCode.findAndDelete(sig);
             });
@@ -722,7 +722,7 @@ ScriptInterpreter.prototype.eval = function eval(script, tx, inIndex, hashType, 
                   checkMultiSigStep.call(this);
                 }.bind(this));
               } else {
-                this.stack.push(new Buffer([success ? 1 : 0]));
+                this.stack.push(Buffer.from([success ? 1 : 0]));
                 if (opcode === Opcode.map.OP_CHECKMULTISIGVERIFY) {
                   if (success) {
                     this.stackPop();
@@ -1010,7 +1010,7 @@ var checkSig = ScriptInterpreter.checkSig =
 
     // Verify signature
     var key = new Key();
-    if (pubkey.length === 0) pubkey = new Buffer('00', 'hex');
+    if (pubkey.length === 0) pubkey = Buffer.from('00', 'hex');
     key.public = pubkey;
 
     key.verifySignature(hash, sig, callback);
@@ -1052,7 +1052,7 @@ ScriptInterpreter.prototype.isCanonicalSignature = function(sig) {
     throw new Error("Non-canonical signature: R+S length mismatch");
 
   var rPos = 4;
-  var R = new Buffer(nLenR);
+  var R = Buffer.alloc(nLenR);
   sig.copy(R, 0, rPos, rPos + nLenR);
   if (sig[rPos - 2] !== 0x02)
     throw new Error("Non-canonical signature: R value type mismatch");
@@ -1064,7 +1064,7 @@ ScriptInterpreter.prototype.isCanonicalSignature = function(sig) {
     throw new Error("Non-canonical signature: R value excessively padded");
 
   var sPos = 6 + nLenR;
-  var S = new Buffer(nLenS);
+  var S = Buffer.alloc(nLenS);
   sig.copy(S, 0, sPos, sPos + nLenS);
   if (sig[sPos - 2] != 0x02)
     throw new Error("Non-canonical signature: S value type mismatch");

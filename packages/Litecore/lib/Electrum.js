@@ -12,12 +12,12 @@ var Key = require('./Key'),
  * @example examples/ElectrumMPK.js
  */
 function Electrum(master_public_key) {
-  this.mpk = new Buffer(master_public_key, 'hex');
+  this.mpk = Buffer.from(master_public_key, 'hex');
 }
 
 Electrum.prototype.getSequence = function(for_change, n) {
   var mode = for_change ? 1 : 0;
-  var buf = Buffer.concat([new Buffer(n + ':' + mode + ':', 'utf8'), this.mpk]);
+  var buf = Buffer.concat([Buffer.from(n + ':' + mode + ':', 'utf8'), this.mpk]);
   return bignum.fromBuffer(twoSha256(buf));
 };
 
@@ -46,7 +46,7 @@ Electrum.prototype.generatePubKey = function(n, for_change) {
   var ybuf = pt.y.toBuffer({
     size: 32
   });
-  var prefix = new Buffer([0x04]);
+  var prefix = Buffer.from([0x04]);
 
   var key = new Key();
   key.compressed = false;

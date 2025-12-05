@@ -8,7 +8,7 @@ function VersionedData(version, payload) {
   if (typeof version != 'number') {
     return;
   };
-  this.data = new Buffer(payload.length + 1);
+  this.data = Buffer.alloc(payload.length + 1);
   this.encoding('binary');
   this.version(version);
   this.payload(payload);

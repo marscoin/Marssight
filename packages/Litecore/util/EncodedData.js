@@ -83,7 +83,7 @@ var encodings = {
   'binary': {
     converters: {
       'binary': function() {
-        var answer = new Buffer(this.data.length);
+        var answer = Buffer.alloc(this.data.length);
         this.data.copy(answer);
         return answer;
       },
@@ -114,7 +114,7 @@ var encodings = {
   'hex': {
     converters: {
       'binary': function() {
-        return new Buffer(this.data, 'hex');
+        return Buffer.from(this.data, 'hex');
       },
       'base58': function() {
         return this.withEncoding('binary').as('base58');

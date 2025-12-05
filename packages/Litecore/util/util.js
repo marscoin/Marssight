@@ -9,7 +9,7 @@ if (process.browser) {
 }
 
 var sha256 = exports.sha256 = function(data) {
-  return new Buffer(crypto.createHash('sha256').update(data).digest('binary'), 'binary');
+  return Buffer.from(crypto.createHash('sha256').update(data).digest('binary'), 'binary');
 };
 
 var sha512 = exports.sha512 = function(data) {
@@ -18,10 +18,10 @@ var sha512 = exports.sha512 = function(data) {
     var databits = sjcl.codec.hex.toBits(datahex);
     var hashbits = sjcl.hash.sha512.hash(databits);
     var hashhex = sjcl.codec.hex.fromBits(hashbits);
-    var hash = new Buffer(hashhex, 'hex');
+    var hash = Buffer.from(hashhex, 'hex');
     return hash;
   };
-  return new Buffer(crypto.createHash('sha512').update(data).digest('binary'), 'binary');
+  return Buffer.from(crypto.createHash('sha512').update(data).digest('binary'), 'binary');
 };
 
 var sha512hmac = exports.sha512hmac = function(data, key) {
@@ -31,7 +31,7 @@ var sha512hmac = exports.sha512hmac = function(data, key) {
     var hmac = new sjcl.misc.hmac(skey, sjcl.hash.sha512);
     var encrypted = hmac.encrypt(sdata);
     var enchex = sjcl.codec.hex.fromBits(encrypted);
-    var encbuf = new Buffer(enchex, 'hex');
+    var encbuf = Buffer.from(enchex, 'hex');
     return encbuf;
   };
   var hmac = crypto.createHmac('sha512', key);
@@ -41,13 +41,13 @@ var sha512hmac = exports.sha512hmac = function(data, key) {
 
 var ripe160 = exports.ripe160 = function(data) {
   if (process.browser) {
-    return new Buffer(hashjs.ripemd160().update(data).digest());
+    return Buffer.from(hashjs.ripemd160().update(data).digest());
   }
-  return new Buffer(crypto.createHash('rmd160').update(data).digest('binary'), 'binary');
+  return Buffer.from(crypto.createHash('rmd160').update(data).digest('binary'), 'binary');
 };
 
 var sha1 = exports.sha1 = function(data) {
-  return new Buffer(crypto.createHash('sha1').update(data).digest('binary'), 'binary');
+  return Buffer.from(crypto.createHash('sha1').update(data).digest('binary'), 'binary');
 };
 
 var twoSha256 = exports.twoSha256 = function(data) {
@@ -62,7 +62,7 @@ var sha256ripe160 = exports.sha256ripe160 = function(data) {
  * Format a block hash like the official client does.
  */
 var formatHash = exports.formatHash = function(hash) {
-  var hashEnd = new Buffer(10);
+  var hashEnd = Buffer.alloc(10);
   hash.copy(hashEnd, 0, 22, 32);
   return buffertools.reverse(hashEnd).toString('hex');
 };
@@ -71,7 +71,7 @@ var formatHash = exports.formatHash = function(hash) {
  * Display the whole hash, as hex, in correct endian order.
  */
 var formatHashFull = exports.formatHashFull = function(hash) {
-  var copy = new Buffer(hash.length);
+  var copy = Buffer.alloc(hash.length);
   hash.copy(copy);
   var hex = buffertools.toHex(buffertools.reverse(copy));
   return hex;
@@ -98,7 +98,7 @@ var formatBuffer = exports.formatBuffer = function(buffer, maxLen) {
   }
 
   // Copy those bytes into a temporary buffer
-  var temp = new Buffer(maxLen);
+  var temp = Buffer.alloc(maxLen);
   buffer.copy(temp, 0, 0, maxLen);
 
   // Format as string
@@ -142,7 +142,7 @@ exports.bytesNeededToStore = bytesNeededToStore = function(integer) {
 
 exports.negativeBuffer = negativeBuffer = function(b) {
   // implement two-complement negative
-  var c = new Buffer(b.length);
+  var c = Buffer.alloc(b.length);
   // negate each byte
   for (var i = 0; i < b.length; i++) {
     c[i] = ~b[i];
@@ -190,7 +190,7 @@ exports.intToBuffer2C = function(integer) {
 var padSign = function(b) {
   var c;
   if (b[0] & 0x80) {
-    c = new Buffer(b.length + 1);
+    c = Buffer.alloc(b.length + 1);
     b.copy(c, 1);
     c[0] = 0;
   } else {
@@ -217,7 +217,7 @@ exports.intToBufferSM = function(v) {
     c = padSign(b);
     c = buffertools.reverse(c);
   } else if (cmp == 0) {
-    c = new Buffer([]);
+    c = Buffer.alloc(0);
   } else {
     b = v.neg().toBuffer();
     c = padSign(b);
@@ -239,7 +239,7 @@ exports.bufferSMToInt = function(v) {
     throw new Error('Bigint cast overflow (> 4 bytes)');
   }
 
-  var w = new Buffer(v.length);
+  var w = Buffer.alloc(v.length);
   v.copy(w);
   w = buffertools.reverse(w);
   var isNeg = w[0] & 0x80;
@@ -372,7 +372,7 @@ var decodeDiffBits = exports.decodeDiffBits = function(diffBits, asBigInt) {
 
   // Convert to buffer
   var diffBuf = target.toBuffer();
-  var targetBuf = new Buffer(32);
+  var targetBuf = Buffer.alloc(32);
   buffertools.fill(targetBuf, 0);
   diffBuf.copy(targetBuf, 32 - diffBuf.length);
   return targetBuf;
@@ -456,18 +456,18 @@ var getVarIntSize = exports.getVarIntSize = function getVarIntSize(i) {
 var varIntBuf = exports.varIntBuf = function varIntBuf(n) {
   var buf = undefined;
   if (n < 253) {
-    buf = new Buffer(1);
+    buf = Buffer.alloc(1);
     buf.writeUInt8(n, 0);
   } else if (n < 0x10000) {
-    buf = new Buffer(1 + 2);
+    buf = Buffer.alloc(1 + 2);
     buf.writeUInt8(253, 0);
     buf.writeUInt16LE(n, 1);
   } else if (n < 0x100000000) {
-    buf = new Buffer(1 + 4);
+    buf = Buffer.alloc(1 + 4);
     buf.writeUInt8(254, 0);
     buf.writeUInt32LE(n, 1);
   } else {
-    buf = new Buffer(1 + 8);
+    buf = Buffer.alloc(1 + 8);
     buf.writeUInt8(255, 0);
     buf.writeInt32LE(n & -1, 1);
     buf.writeUInt32LE(Math.floor(n / 0x100000000), 5);
@@ -481,10 +481,10 @@ var varStrBuf = exports.varStrBuf = function varStrBuf(s) {
 };
 
 // Initializations
-exports.NULL_HASH = buffertools.fill(new Buffer(32), 0);
-exports.EMPTY_BUFFER = new Buffer(0);
-exports.ZERO_VALUE = buffertools.fill(new Buffer(8), 0);
-var INT64_MAX = new Buffer('ffffffffffffffff', 'hex');
+exports.NULL_HASH = buffertools.fill(Buffer.alloc(32), 0);
+exports.EMPTY_BUFFER = Buffer.alloc(0);
+exports.ZERO_VALUE = buffertools.fill(Buffer.alloc(8), 0);
+var INT64_MAX = Buffer.from('ffffffffffffffff', 'hex');
 exports.INT64_MAX = INT64_MAX;
 
 // How much of Bitcoin's internal integer coin representation
@@ -492,4 +492,4 @@ exports.INT64_MAX = INT64_MAX;
 exports.COIN = 100000000;
 exports.BIT = 100;
 
-var MAX_TARGET = exports.MAX_TARGET = new Buffer('00000000FFFF0000000000000000000000000000000000000000000000000000', 'hex');
+var MAX_TARGET = exports.MAX_TARGET = Buffer.from('00000000FFFF0000000000000000000000000000000000000000000000000000', 'hex');

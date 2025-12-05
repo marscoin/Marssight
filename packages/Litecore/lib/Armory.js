@@ -10,8 +10,8 @@ var Point = require('./Point'),
  * @example examples/Armory.js
  */
 function Armory(chaincode, pubkey) {
-  this.chaincode = new Buffer(chaincode, 'hex');
-  this.pubkey = new Buffer(pubkey, 'hex');
+  this.chaincode = Buffer.from(chaincode, 'hex');
+  this.pubkey = Buffer.from(pubkey, 'hex');
 }
 
 Armory.prototype.generatePubKey = function() {
@@ -65,7 +65,7 @@ Armory.decodeSeed = function(seed) {
 
   for (var i = 0; i < keys.length; i++) {
     var k = keys[i].replace(' ', '');
-    var raw = new Buffer(decode(k), 'hex');
+    var raw = Buffer.from(decode(k), 'hex');
     var data = raw.slice(0, 16);
     lines.push(data);
   }
@@ -103,10 +103,10 @@ Armory.deriveChaincode = function(root) {
     ikey.push(0x36 ^ hash[i]);
   }
 
-  okey = new Buffer(okey);
-  ikey = new Buffer(ikey);
+  okey = Buffer.from(okey);
+  ikey = Buffer.from(ikey);
 
-  var m = new Buffer(msg, 'utf8');
+  var m = Buffer.from(msg, 'utf8');
   var a = sha256(Buffer.concat([ikey, m]));
   var b = sha256(Buffer.concat([okey, a]));
   return b;

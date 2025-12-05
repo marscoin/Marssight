@@ -137,7 +137,7 @@ Connection.prototype.handleMessage = function(message) {
         }
 
         if (message.version >= 209) {
-          this.sendMessage('verack', new Buffer([]));
+          this.sendMessage('verack', Buffer.alloc(0));
         }
         this.sendVer = Math.min(message.version, PROTOCOL_VERSION);
         if (message.version < 209) {
@@ -192,7 +192,7 @@ Connection.prototype.sendVersion = function() {
   put.pad(26); // addr_you
   put.put(nonce);
   put.varint(subversion.length);
-  put.put(new Buffer(subversion, 'ascii'));
+  put.put(Buffer.from(subversion, 'ascii'));
   put.word32le(0);
 
   this.sendMessage('version', put.buffer());
@@ -216,7 +216,7 @@ Connection.prototype.sendGetBlocks = function(starts, stop, wantHeaders) {
     put.put(starts[i]);
   }
 
-  var stopBuffer = new Buffer(stop, 'binary');
+  var stopBuffer = Buffer.from(stop, 'binary');
   if (stopBuffer.length != 32) {
     throw new Error('Invalid hash length');
   }
@@ -299,14 +299,14 @@ Connection.prototype.sendBlock = function(block, txs) {
 Connection.prototype.sendMessage = function(command, payload) {
   try {
     var magic = this.network.magic;
-    var commandBuf = new Buffer(command, 'ascii');
+    var commandBuf = Buffer.from(command, 'ascii');
     if (commandBuf.length > 12) throw 'Command name too long';
 
     var checksum;
     if (this.sendVer >= 209) {
       checksum = doubleSha256(payload).slice(0, 4);
     } else {
-      checksum = new Buffer([]);
+      checksum = Buffer.alloc(0);
     }
 
     var message = new Put(); // -- HEADER --

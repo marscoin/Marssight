@@ -9,7 +9,7 @@ Hash.sha256 = function(buf) {
   if (!Buffer.isBuffer(buf))
     throw new Error('sha256 hash must be of a buffer');
   var hash = (new hashjs.sha256()).update(buf).digest();
-  return new Buffer(hash);
+  return Buffer.from(hash);
 };
 
 Hash.sha256.blocksize = 512;
@@ -26,7 +26,7 @@ Hash.ripemd160 = function(buf) {
   if (!Buffer.isBuffer(buf))
     throw new Error('ripemd160 hash must be of a buffer');
   var hash = (new hashjs.ripemd160()).update(buf).digest();
-  return new Buffer(hash);
+  return Buffer.from(hash);
 };
 
 Hash.sha256ripemd160 = function(buf) {
@@ -41,7 +41,7 @@ Hash.sha512 = function(buf) {
   if (!Buffer.isBuffer(buf))
     throw new Error('sha512 hash must be of a buffer');
   var hash = sha512(buf);
-  return new Buffer(hash);
+  return Buffer.from(hash);
 };
 
 Hash.sha512.blocksize = 1024;
@@ -56,24 +56,24 @@ Hash.hmac = function(hashf, data, key) {
     throw new Error('Blocksize for hash function unknown');
 
   var blocksize = hashf.blocksize/8;
-  
+
   if (key.length > blocksize)
     key = hashf(key);
   else if (key < blocksize) {
-    var fill = new Buffer(blocksize);
+    var fill = Buffer.alloc(blocksize);
     fill.fill(0);
     key.copy(fill);
     key = fill;
   }
 
-  var o_key = new Buffer(blocksize);
+  var o_key = Buffer.alloc(blocksize);
   o_key.fill(0x5c);
 
-  var i_key = new Buffer(blocksize);
+  var i_key = Buffer.alloc(blocksize);
   i_key.fill(0x36);
 
-  var o_key_pad = new Buffer(blocksize);
-  var i_key_pad = new Buffer(blocksize);
+  var o_key_pad = Buffer.alloc(blocksize);
+  var i_key_pad = Buffer.alloc(blocksize);
   for (var i = 0; i < blocksize; i++) {
     o_key_pad[i] = o_key[i] ^ key[i];
     i_key_pad[i] = i_key[i] ^ key[i];

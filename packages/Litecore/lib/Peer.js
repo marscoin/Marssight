@@ -33,7 +33,7 @@ function Peer(host, port, services) {
   this.lastSeen = 0;
 };
 
-Peer.IPV6_IPV4_PADDING = new Buffer([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255]);
+Peer.IPV6_IPV4_PADDING = Buffer.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255]);
 
 Peer.prototype.createConnection = function() {
   this.connection = Net.createConnection(this.port, this.host);
@@ -41,7 +41,7 @@ Peer.prototype.createConnection = function() {
 };
 
 Peer.prototype.getHostAsBuffer = function() {
-  return new Buffer(this.host.split('.'));
+  return Buffer.from(this.host.split('.').map(Number));
 };
 
 Peer.prototype.toString = function() {

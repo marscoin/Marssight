@@ -33,7 +33,7 @@ function Block(data) {
 }
 
 Block.prototype.getHeader = function getHeader() {
-  var buf = new Buffer(80);
+  var buf = Buffer.alloc(80);
   var ofs = 0;
   buf.writeUInt32LE(this.version, ofs);
   ofs += 4;
@@ -197,7 +197,7 @@ Block.prototype.checkMerkleRoot = function checkMerkleRoot(txs) {
     throw new VerificationError('No merkle root');
   }
 
-  if (buffertools.compare(this.calcMerkleRoot(txs), new Buffer(this.merkle_root)) !== 0) {
+  if (buffertools.compare(this.calcMerkleRoot(txs), Buffer.from(this.merkle_root)) !== 0) {
     throw new VerificationError('Merkle root incorrect');
   }
 

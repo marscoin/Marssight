@@ -1,7 +1,7 @@
 var Put = require('bufferput');
 var buffertools = require('buffertools');
 var hex = function(hex) {
-  return new Buffer(hex, 'hex');
+  return Buffer.from(hex, 'hex');
 };
 
 exports.livenet = {
@@ -18,7 +18,7 @@ exports.livenet = {
     height: 0,
     nonce: 2084524493,
     version: 1,
-    prev_hash: buffertools.fill(new Buffer(32), 0),
+    prev_hash: buffertools.fill(Buffer.alloc(32), 0),
     timestamp: 1317972665,
     bits: 504365040,
   },
@@ -45,7 +45,7 @@ exports.testnet = {  //not setup for marscoin yet
     height: 0,
     nonce: 265310,
     version: 1,
-    prev_hash: buffertools.fill(new Buffer(32), 0),
+    prev_hash: buffertools.fill(Buffer.alloc(32), 0),
     timestamp: 1392281929,
     bits: 486604799,
   },

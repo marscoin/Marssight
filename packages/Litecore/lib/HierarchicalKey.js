@@ -23,8 +23,8 @@ var HierarchicalKey = function(bytes) {
   }
   if (bytes == 'livenet' || bytes == 'testnet') {
     this.depth = 0x00;
-    this.parentFingerprint = new Buffer([0, 0, 0, 0]);
-    this.childIndex = new Buffer([0, 0, 0, 0]);
+    this.parentFingerprint = Buffer.from([0, 0, 0, 0]);
+    this.childIndex = Buffer.from([0, 0, 0, 0]);
     this.chainCode = Random.getRandomBuffer(32);
     this.eckey = Key.generateSync();
     this.hasPrivateKey = true;
@@ -58,17 +58,17 @@ HierarchicalKey.seed = function(bytes, network) {
     network = 'livenet';
 
   if (!Buffer.isBuffer(bytes))
-    bytes = new Buffer(bytes, 'hex'); //if not buffer, assume hex
+    bytes = Buffer.from(bytes, 'hex'); //if not buffer, assume hex
   if (bytes.length < 128 / 8)
     return false; //need more entropy
   if (bytes.length > 512 / 8)
     return false;
-  var hash = coinUtil.sha512hmac(bytes, new Buffer('Litecoin seed'));
+  var hash = coinUtil.sha512hmac(bytes, Buffer.from('Litecoin seed'));
 
   var hkey = new HierarchicalKey(null);
   hkey.depth = 0x00;
-  hkey.parentFingerprint = new Buffer([0, 0, 0, 0]);
-  hkey.childIndex = new Buffer([0, 0, 0, 0]);
+  hkey.parentFingerprint = Buffer.from([0, 0, 0, 0]);
+  hkey.childIndex = Buffer.from([0, 0, 0, 0]);
   hkey.chainCode = hash.slice(32, 64);
   hkey.version = networks[network].hkeyPrivateVersion;
   hkey.eckey = new Key();
@@ -124,7 +124,7 @@ HierarchicalKey.prototype.initFromBytes = function(bytes) {
 }
 
 HierarchicalKey.prototype.buildExtendedPublicKey = function() {
-  this.extendedPublicKey = new Buffer([]);
+  this.extendedPublicKey = Buffer.alloc(0);
 
   var v = null;
   switch (this.version) {
@@ -142,16 +142,16 @@ HierarchicalKey.prototype.buildExtendedPublicKey = function() {
 
   // Version
   this.extendedPublicKey = Buffer.concat([
-    new Buffer([v >> 24]),
-    new Buffer([(v >> 16) & 0xff]),
-    new Buffer([(v >> 8) & 0xff]),
-    new Buffer([v & 0xff]),
-    new Buffer([this.depth]),
+    Buffer.from([v >> 24]),
+    Buffer.from([(v >> 16) & 0xff]),
+    Buffer.from([(v >> 8) & 0xff]),
+    Buffer.from([v & 0xff]),
+    Buffer.from([this.depth]),
     this.parentFingerprint,
-    new Buffer([this.childIndex >>> 24]),
-    new Buffer([(this.childIndex >>> 16) & 0xff]),
-    new Buffer([(this.childIndex >>> 8) & 0xff]),
-    new Buffer([this.childIndex & 0xff]),
+    Buffer.from([this.childIndex >>> 24]),
+    Buffer.from([(this.childIndex >>> 16) & 0xff]),
+    Buffer.from([(this.childIndex >>> 8) & 0xff]),
+    Buffer.from([this.childIndex & 0xff]),
     this.chainCode,
     this.eckey.public
   ]);
@@ -172,23 +172,23 @@ HierarchicalKey.prototype.extendedPublicKeyString = function(format) {
 
 HierarchicalKey.prototype.buildExtendedPrivateKey = function() {
   if (!this.hasPrivateKey) return;
-  this.extendedPrivateKey = new Buffer([]);
+  this.extendedPrivateKey = Buffer.alloc(0);
 
   var v = this.version;
 
   this.extendedPrivateKey = Buffer.concat([
-    new Buffer([v >> 24]),
-    new Buffer([(v >> 16) & 0xff]),
-    new Buffer([(v >> 8) & 0xff]),
-    new Buffer([v & 0xff]),
-    new Buffer([this.depth]),
+    Buffer.from([v >> 24]),
+    Buffer.from([(v >> 16) & 0xff]),
+    Buffer.from([(v >> 8) & 0xff]),
+    Buffer.from([v & 0xff]),
+    Buffer.from([this.depth]),
     this.parentFingerprint,
-    new Buffer([this.childIndex >>> 24]),
-    new Buffer([(this.childIndex >>> 16) & 0xff]),
-    new Buffer([(this.childIndex >>> 8) & 0xff]),
-    new Buffer([this.childIndex & 0xff]),
+    Buffer.from([this.childIndex >>> 24]),
+    Buffer.from([(this.childIndex >>> 16) & 0xff]),
+    Buffer.from([(this.childIndex >>> 8) & 0xff]),
+    Buffer.from([this.childIndex & 0xff]),
     this.chainCode,
-    new Buffer([0]),
+    Buffer.from([0]),
     this.eckey.private
   ]);
 }
@@ -241,7 +241,7 @@ HierarchicalKey.prototype.deriveChild = function(i) {
   ib.push((i >> 16) & 0xff);
   ib.push((i >> 8) & 0xff);
   ib.push(i & 0xff);
-  ib = new Buffer(ib);
+  ib = Buffer.from(ib);
 
   var usePrivate = (i & 0x80000000) != 0;
 
@@ -257,7 +257,7 @@ HierarchicalKey.prototype.deriveChild = function(i) {
     var data = null;
 
     if (usePrivate) {
-      data = Buffer.concat([new Buffer([0]), this.eckey.private, ib]);
+      data = Buffer.concat([Buffer.from([0]), this.eckey.private, ib]);
     } else {
       data = Buffer.concat([this.eckey.public, ib]);
     }
@@ -303,7 +303,7 @@ HierarchicalKey.prototype.deriveChild = function(i) {
     var newpub = Point.add(ilG, Kpar).toUncompressedPubKey();
 
     ret = new HierarchicalKey(null);
-    ret.chainCode = new Buffer(ir);
+    ret.chainCode = Buffer.from(ir);
 
     var eckey = new Key();
     eckey.public = newpub;

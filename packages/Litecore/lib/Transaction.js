@@ -13,7 +13,7 @@ var error = require('../util/error');
 var PrivateKey = require('./PrivateKey');
 var preconditions = require('preconditions').singleton();
 
-var COINBASE_OP = Buffer.concat([util.NULL_HASH, new Buffer('FFFFFFFF', 'hex')]);
+var COINBASE_OP = Buffer.concat([util.NULL_HASH, Buffer.from('FFFFFFFF', 'hex')]);
 var FEE_PER_1000B_SAT = parseInt(0.0001 * util.COIN);
 
 Transaction.COINBASE_OP = COINBASE_OP;
@@ -26,9 +26,9 @@ function TransactionIn(data) {
     this.o = data.o;
   } else {
     if (data.oTxHash && typeof data.oIndex !== 'undefined' && data.oIndex >= 0) {
-      var hash = new Buffer(data.oTxHash, 'hex');
+      var hash = Buffer.from(data.oTxHash, 'hex');
       hash = buffertools.reverse(hash);
-      var voutBuf = new Buffer(4);
+      var voutBuf = Buffer.alloc(4);
       voutBuf.writeUInt32LE(data.oIndex, 0);
       this.o = Buffer.concat([hash, voutBuf]);
     }
@@ -47,13 +47,13 @@ TransactionIn.prototype.getScript = function getScript() {
 TransactionIn.prototype.isCoinBase = function isCoinBase() {
   if (!this.o) return false;
 
-  //The new Buffer is for Firefox compatibility
-  return buffertools.compare(new Buffer(this.o), COINBASE_OP) === 0;
+  //Buffer.from is for Firefox compatibility
+  return buffertools.compare(Buffer.from(this.o), COINBASE_OP) === 0;
 };
 
 TransactionIn.prototype.serialize = function serialize() {
   var slen = util.varIntBuf(this.s.length);
-  var qbuf = new Buffer(4);
+  var qbuf = Buffer.alloc(4);
   qbuf.writeUInt32LE(this.q, 0);
 
   var ret = Buffer.concat([this.o, slen, this.s, qbuf]);
@@ -150,7 +150,7 @@ Transaction.prototype.isStandard = function isStandard() {
 Transaction.prototype.serialize = function serialize() {
   var bufs = [];
 
-  var buf = new Buffer(4);
+  var buf = Buffer.alloc(4);
   buf.writeUInt32LE(this.version, 0);
   bufs.push(buf);
 
@@ -164,9 +164,9 @@ Transaction.prototype.serialize = function serialize() {
     bufs.push(txout.serialize());
   });
 
-  var buf = new Buffer(4);
-  buf.writeUInt32LE(this.lock_time, 0);
-  bufs.push(buf);
+  var buf2 = Buffer.alloc(4);
+  buf2.writeUInt32LE(this.lock_time, 0);
+  bufs.push(buf2);
 
   this._buffer = Buffer.concat(bufs);
   return this._buffer;
@@ -394,7 +394,7 @@ Transaction.Serializer = TransactionSignatureSerializer;
 var oneBuffer = function() {
   // bug present in bitcoind which must be also present in bitcore
   // see https://bitcointalk.org/index.php?topic=260595
-  var ret = new Buffer(32);
+  var ret = Buffer.alloc(32);
   ret.writeUInt8(1, 0);
   for (var i = 1; i < 32; i++) ret.writeUInt8(0, i);
   return ret; // return 1 bug
@@ -447,7 +447,7 @@ Transaction.prototype.getStandardizedObject = function getStandardizedObject() {
   var ins = this.ins.map(function(txin) {
     var txinObj = {
       prev_out: {
-        hash: buffertools.reverse(new Buffer(txin.getOutpointHash())).toString('hex'),
+        hash: buffertools.reverse(Buffer.from(txin.getOutpointHash())).toString('hex'),
         n: txin.getOutpointIndex()
       },
       sequence: txin.q
@@ -497,10 +497,10 @@ Transaction.prototype.fromObj = function fromObj(obj) {
     txin.s = util.EMPTY_BUFFER;
     txin.q = 0xffffffff;
 
-    var hash = new Buffer(inputobj.txid, 'hex');
+    var hash = Buffer.from(inputobj.txid, 'hex');
     hash = buffertools.reverse(hash);
     var vout = parseInt(inputobj.vout);
-    var voutBuf = new Buffer(4);
+    var voutBuf = Buffer.alloc(4);
     voutBuf.writeUInt32LE(vout, 0);
 
     txin.o = Buffer.concat([hash, voutBuf]);

@@ -45,7 +45,7 @@ ECDSA.prototype.calci = function() {
 ECDSA.prototype.fromString = function(str) {
   var obj = JSON.parse(str);
   if (obj.hashbuf)
-    this.hashbuf = new Buffer(obj.hashbuf, 'hex');
+    this.hashbuf = Buffer.from(obj.hashbuf, 'hex');
   if (obj.keypair)
     this.keypair = Keypair().fromString(obj.keypair);
   if (obj.sig)

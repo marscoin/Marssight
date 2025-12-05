@@ -38,7 +38,7 @@ BN.prototype.fromString = function(str) {
 
 BN.fromBuffer = function(buf, opts) {
   if (typeof opts !== 'undefined' && opts.endian === 'little') {
-    var nbuf = new Buffer(buf.length);
+    var nbuf = Buffer.alloc(buf.length);
     reversebuf(buf, nbuf);
     buf = nbuf;
   }
@@ -59,7 +59,7 @@ BN.prototype.toBuffer = function(opts) {
   if (opts && opts.size) {
     var hex = this.toString(16, 2);
     var natlen = hex.length/2;
-    buf = new Buffer(hex, 'hex');
+    buf = Buffer.from(hex, 'hex');
 
     if (natlen == opts.size)
       buf = buf;
@@ -69,7 +69,7 @@ BN.prototype.toBuffer = function(opts) {
     }
 
     else if (natlen < opts.size) {
-      var rbuf = new Buffer(opts.size);
+      var rbuf = Buffer.alloc(opts.size);
       //rbuf.fill(0);
       for (var i = 0; i < buf.length; i++)
         rbuf[rbuf.length-1-i] = buf[buf.length-1-i];
@@ -80,11 +80,11 @@ BN.prototype.toBuffer = function(opts) {
   }
   else {
     var hex = this.toString(16, 2);
-    buf = new Buffer(hex, 'hex');
+    buf = Buffer.from(hex, 'hex');
   }
 
   if (typeof opts !== 'undefined' && opts.endian === 'little') {
-    var nbuf = new Buffer(buf.length);
+    var nbuf = Buffer.alloc(buf.length);
     reversebuf(buf, nbuf);
     buf = nbuf;
   }

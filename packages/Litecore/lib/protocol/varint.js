@@ -28,7 +28,7 @@ Varint.prototype.set = function(obj) {
 
 Varint.prototype.fromJSON = function(json) {
   this.set({
-    buf: new Buffer(json, 'hex')
+    buf: Buffer.from(json, 'hex')
   });
   return this;
 };

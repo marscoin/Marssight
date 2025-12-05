@@ -159,7 +159,7 @@ PayPro.verifyCertChain = function(chain, sigHashAlg) {
     //
     // Get Public Key from next certificate:
     //
-    var ndata = new Buffer(nder, 'hex');
+    var ndata = Buffer.from(nder, 'hex');
     var nc = rfc3280.Certificate.decode(ndata, 'der');
     var npubKeyAlg = PayPro.getAlgorithm(
       nc.tbsCertificate.subjectPublicKeyInfo.algorithm.algorithm);
@@ -169,7 +169,7 @@ PayPro.verifyCertChain = function(chain, sigHashAlg) {
     //
     // Get Signature Value from current certificate:
     //
-    var data = new Buffer(der, 'hex');
+    var data = Buffer.from(der, 'hex');
     var c = rfc3280.Certificate.decode(data, 'der');
     var sigAlg = PayPro.getAlgorithm(c.signatureAlgorithm.algorithm, 1);
     var sig = c.signature.data;

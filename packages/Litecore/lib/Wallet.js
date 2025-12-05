@@ -1,5 +1,5 @@
 var hex = function(hex) {
-  return new Buffer(hex, 'hex');
+  return Buffer.from(hex, 'hex');
 };
 
 var fs = require('fs');

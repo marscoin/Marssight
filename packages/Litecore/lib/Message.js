@@ -43,12 +43,12 @@ Message.verifyMessage = function(pubkeyhash, message, sig) {
 
 //TODO: Message.verify ... with address, not pubkey
 
-Message.magicBytes = new Buffer('Bitcoin Signed Message:\n');
+Message.magicBytes = Buffer.from('Bitcoin Signed Message:\n');
 
 Message.magicHash = function(str) {
   var magicBytes = Message.magicBytes;
   var prefix1 = coinUtil.varIntBuf(magicBytes.length);
-  var message = new Buffer(str);
+  var message = Buffer.from(str);
   var prefix2 = coinUtil.varIntBuf(message.length);
 
   var buf = Buffer.concat([prefix1, magicBytes, prefix2, message]);

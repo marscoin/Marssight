@@ -20,28 +20,28 @@ AuthMessage.setVersion = function(major, minor) {
 AuthMessage.encode = function(topubkey, fromkey, payload, opts) {
   preconditions.checkArgument(fromkey instanceof Key, 'fromkey');
   if (typeof topubkey === 'string') {
-    topubkey = new Buffer(topubkey, 'hex');
+    topubkey = Buffer.from(topubkey, 'hex');
   }
   if (!(payload instanceof Buffer)) {
-    payload = new Buffer(JSON.stringify(payload));
+    payload = Buffer.from(JSON.stringify(payload));
   }
   //peers should reject messges containing bigger major version
   //i.e., increment to prevent communications with old clients
-  var version1 = new Buffer([majorVersion]);
+  var version1 = Buffer.from([majorVersion]);
 
   //peers should not reject messages containing not-understood minorversion
   //i.e., increment to allow communication with old clients, but signal new clients
-  var version2 = new Buffer([minorVersion]);
+  var version2 = Buffer.from([minorVersion]);
 
   if (opts && opts.nonce && Buffer.isBuffer(opts.nonce) && opts.nonce.length == 8) {
     var nonce = opts.nonce;
   } else {
-    var nonce = new Buffer(8);
+    var nonce = Buffer.alloc(8);
     nonce.fill(0); //nonce is a big endian 8 byte number
   }
 
   var toencrypt = Buffer.concat([version1, version2, nonce, payload]);
-  var toencrypthexbuf = new Buffer(toencrypt.toString('hex')); //due to bug in sjcl/bitcore, must use hex string
+  var toencrypthexbuf = Buffer.from(toencrypt.toString('hex')); //due to bug in sjcl/bitcore, must use hex string
   var encrypted = AuthMessage._encrypt(topubkey, toencrypthexbuf);
   var sig = AuthMessage._sign(fromkey, encrypted);
   var encoded = {
@@ -57,19 +57,19 @@ AuthMessage.decode = function(key, encoded, opts) {
   if (opts && opts.prevnonce && Buffer.isBuffer(opts.prevnonce) && opts.prevnonce.length == 8) {
     var prevnonce = opts.prevnonce;
   } else {
-    var prevnonce = new Buffer(8);
+    var prevnonce = Buffer.alloc(8);
     prevnonce.fill(0); //nonce is a big endian 8 byte number
   }
 
   try {
-    var frompubkey = new Buffer(encoded.pubkey, 'hex');
+    var frompubkey = Buffer.from(encoded.pubkey, 'hex');
   } catch (e) {
     throw new Error('Error decoding public key: ' + e);
   }
 
   try {
-    var sig = new Buffer(encoded.sig, 'hex');
-    var encrypted = new Buffer(encoded.encrypted, 'hex');
+    var sig = Buffer.from(encoded.sig, 'hex');
+    var encrypted = Buffer.from(encoded.encrypted, 'hex');
   } catch (e) {
     throw new Error('Error decoding data: ' + e);
   }
@@ -86,7 +86,7 @@ AuthMessage.decode = function(key, encoded, opts) {
 
   try {
     var decryptedhexbuf = AuthMessage._decrypt(key.private, encrypted);
-    var decrypted = new Buffer(decryptedhexbuf.toString(), 'hex'); //workaround for bug in bitcore/sjcl
+    var decrypted = Buffer.from(decryptedhexbuf.toString(), 'hex'); //workaround for bug in bitcore/sjcl
   } catch (e) {
     throw new Error('Cannot decrypt data: ' + e);
   }

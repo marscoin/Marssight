@@ -46,7 +46,7 @@ Base58Check.decode = function(s) {
 Base58Check.encode = function(buf) {
   if (!Buffer.isBuffer(buf))
     throw new Error('Input must be a buffer');
-  var checkedBuf = new Buffer(buf.length + 4);
+  var checkedBuf = Buffer.alloc(buf.length + 4);
   var hash = sha256sha256(buf);
   buf.copy(checkedBuf);
   hash.copy(checkedBuf, buf.length);

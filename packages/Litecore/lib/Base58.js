@@ -1,11 +1,11 @@
 var crypto = require('crypto');
 var bignum = require('bignum');
 
-var globalBuffer = new Buffer(1024);
-var zerobuf = new Buffer(0);
+var globalBuffer = Buffer.alloc(1024);
+var zerobuf = Buffer.alloc(0);
 var ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 var ALPHABET_ZERO = ALPHABET[0];
-var ALPHABET_BUF = new Buffer(ALPHABET, 'ascii');
+var ALPHABET_BUF = Buffer.from(ALPHABET, 'ascii');
 var ALPHABET_INV = {};
 for (var i = 0; i < ALPHABET.length; i++) {
   ALPHABET_INV[ALPHABET[i]] = i;
@@ -21,7 +21,7 @@ var base58 = {
     if (buf.length < 512) {
       str = globalBuffer;
     } else {
-      str = new Buffer(buf.length << 1);
+      str = Buffer.alloc(buf.length << 1);
     }
     var i = str.length - 1;
     while (x.gt(0)) {
@@ -54,7 +54,7 @@ var base58 = {
       i++;
     }
     if (i > 0) {
-      var zb = new Buffer(i);
+      var zb = Buffer.alloc(i);
       zb.fill(0);
       if (i == str.length) return zb;
       answer = answer.toBuffer();
@@ -67,7 +67,7 @@ var base58 = {
 
 // Base58Check Encoding
 function sha256(data) {
-  return new Buffer(crypto.createHash('sha256').update(data).digest('binary'), 'binary');
+  return Buffer.from(crypto.createHash('sha256').update(data).digest('binary'), 'binary');
 };
 
 function doubleSHA256(data) {
@@ -76,7 +76,7 @@ function doubleSHA256(data) {
 
 var base58Check = {
   encode: function(buf) {
-    var checkedBuf = new Buffer(buf.length + 4);
+    var checkedBuf = Buffer.alloc(buf.length + 4);
     var hash = doubleSHA256(buf);
     buf.copy(checkedBuf);
     hash.copy(checkedBuf, buf.length);

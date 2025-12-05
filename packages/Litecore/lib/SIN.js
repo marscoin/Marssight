@@ -12,7 +12,7 @@ function SIN(type, payload) {
   if (!Buffer.isBuffer(payload) || payload.length != 20)
     throw new Error('Payload must be 20 bytes');
 
-  this.data = new Buffer(1 + 1 + payload.length);
+  this.data = Buffer.alloc(1 + 1 + payload.length);
   this.converters = this.encodings['binary'].converters;
   this._encoding = this.encodings['binary']._encoding;
   this.encoding('binary');

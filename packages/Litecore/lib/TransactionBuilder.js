@@ -128,7 +128,7 @@ TransactionBuilder._scriptForPubkeys = function(out) {
   var pubKeyBuf = [];
 
   for (var i = 0; i < l; i++) {
-    pubKeyBuf.push(new Buffer(out.pubkeys[i], 'hex'));
+    pubKeyBuf.push(Buffer.from(out.pubkeys[i], 'hex'));
   }
 
   return Script.createMultisig(out.nreq, pubKeyBuf);
@@ -195,7 +195,7 @@ TransactionBuilder.prototype._setInputMap = function() {
   var l = this.selectedUtxos.length;
   for (var i = 0; i < l; i++) {
     var utxo = this.selectedUtxos[i];
-    var scriptBuf = new Buffer(utxo.scriptPubKey, 'hex');
+    var scriptBuf = Buffer.from(utxo.scriptPubKey, 'hex');
     var scriptPubKey = new Script(scriptBuf);
     var scriptType = scriptPubKey.classify();
 
@@ -289,11 +289,11 @@ TransactionBuilder.prototype._setInputs = function(txobj) {
     txin.s = util.EMPTY_BUFFER;
     txin.q = 0xffffffff;
 
-    var hash = new Buffer(ins[i].txid, 'hex');
+    var hash = Buffer.from(ins[i].txid, 'hex');
     var hashReversed = buffertools.reverse(hash);
 
     var vout = parseInt(ins[i].vout);
-    var voutBuf = new Buffer(4);
+    var voutBuf = Buffer.alloc(4);
     voutBuf.writeUInt32LE(vout, 0);
 
     txin.o = Buffer.concat([hashReversed, voutBuf]);
@@ -518,7 +518,7 @@ TransactionBuilder.prototype._signPubKey = function(walletKeyMap, input, txSigHa
   if (!wk) return;
 
   var sigRaw = TransactionBuilder._signHashAndVerify(wk, txSigHash);
-  var sigType = new Buffer(1);
+  var sigType = Buffer.alloc(1);
   sigType[0] = this.signhash;
   var sig = Buffer.concat([sigRaw, sigType]);
 
@@ -540,7 +540,7 @@ TransactionBuilder.prototype._signPubKeyHash = function(walletKeyMap, input, txS
   if (!wk) return;
 
   var sigRaw = TransactionBuilder._signHashAndVerify(wk, txSigHash);
-  var sigType = new Buffer(1);
+  var sigType = Buffer.alloc(1);
   sigType[0] = this.signhash;
   var sig = Buffer.concat([sigRaw, sigType]);
 
@@ -572,7 +572,7 @@ TransactionBuilder.prototype._chunkSignedWithKey = function(scriptSig, txSigHash
 
   for (var i = 1; i <= scriptSig.countSignatures(); i++) {
     var chunk = scriptSig.chunks[i];
-    var sigRaw = new Buffer(chunk.slice(0, chunk.length - 1));
+    var sigRaw = Buffer.from(chunk.slice(0, chunk.length - 1));
     if (k.verifySignatureSync(txSigHash, sigRaw)) {
       ret = chunk;
     }
@@ -585,7 +585,7 @@ TransactionBuilder.prototype._getSignatureOrder = function(sigPrio, sigRaw, txSi
   var l = pubkeys.length;
   for (var j = 0; j < l; j++) {
     var k = new Key();
-    k.public = new Buffer(pubkeys[j], 'hex');
+    k.public = Buffer.from(pubkeys[j], 'hex');
     if (k.verifySignatureSync(txSigHash, sigRaw))
       break;
   }
@@ -596,7 +596,7 @@ TransactionBuilder.prototype._getNewSignatureOrder = function(sigPrio, scriptSig
   var iPrio;
   for (var i = 1; i <= scriptSig.countSignatures(); i++) {
     var chunk = scriptSig.chunks[i];
-    var sigRaw = new Buffer(chunk.slice(0, chunk.length - 1));
+    var sigRaw = Buffer.from(chunk.slice(0, chunk.length - 1));
     iPrio = this._getSignatureOrder(sigPrio, sigRaw, txSigHash, pubkeys);
     if (sigPrio <= iPrio) break;
   }
@@ -625,7 +625,7 @@ TransactionBuilder.prototype._updateMultiSig = function(sigPrio, wk, scriptSig, 
 
   // Create signature
   var sigRaw = TransactionBuilder._signHashAndVerify(wk, txSigHash);
-  var sigType = new Buffer(1);
+  var sigType = Buffer.alloc(1);
   sigType[0] = this.signhash;
   var sig = Buffer.concat([sigRaw, sigType]);
 
@@ -722,7 +722,7 @@ TransactionBuilder.prototype._p2shInput = function(input) {
   var scriptHex = this.hashToScriptMap[input.address];
   if (!scriptHex) return;
 
-  var scriptBuf = new Buffer(scriptHex, 'hex');
+  var scriptBuf = Buffer.from(scriptHex, 'hex');
   var script = new Script(scriptBuf);
   var scriptType = script.classify();
 
@@ -851,7 +851,7 @@ TransactionBuilder.prototype._setScriptSig = function(inScriptSig) {
   this.vanilla.scriptSig = inScriptSig;
 
   for (var i in inScriptSig) {
-    this.tx.ins[i].s = new Buffer(inScriptSig[i], 'hex');
+    this.tx.ins[i].s = Buffer.from(inScriptSig[i], 'hex');
     var scriptSig = new Script(this.tx.ins[i].s);
     if (scriptSig.finishedMultiSig() !== false)
       this.inputsSigned++;

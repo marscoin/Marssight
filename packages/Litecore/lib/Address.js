@@ -86,7 +86,7 @@ Address.fromScript = function(script, network) {
     network = 'livenet';
 
   if (typeof script === 'string') {
-    script = new Script(new Buffer(script, 'hex'));
+    script = new Script(Buffer.from(script, 'hex'));
   }
 
   var version = networks[network].P2SHVersion;
@@ -99,7 +99,7 @@ Address.fromScript = function(script, network) {
 //extract an address from scriptPubKey
 Address.fromScriptPubKey = function(scriptPubKey, network) {
   if (typeof scriptPubKey === 'string') {
-    scriptPubKey = new Script(new Buffer(scriptPubKey, 'hex'));
+    scriptPubKey = new Script(Buffer.from(scriptPubKey, 'hex'));
   }
 
   if (!network)
@@ -195,7 +195,7 @@ Address.fromScriptSig = function(scriptSig, network) {
   // Ensure scriptSig is a buffer
   if (typeof scriptSig === 'string') {
     try {
-      scriptSigBuf = new Buffer(scriptSig, 'hex');
+      scriptSigBuf = Buffer.from(scriptSig, 'hex');
     } catch (err) {
       console.error("Invalid scriptSig: not a valid hex string.", err);
       return null;

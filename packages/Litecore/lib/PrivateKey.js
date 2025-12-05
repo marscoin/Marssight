@@ -44,7 +44,7 @@ PrivateKey.prototype.compressed = function(compressed) {
     this.doAsBinary(function() {
       var len = 1 + 32 + 1;
       if (compressed) {
-        var data = new Buffer(len);
+        var data = Buffer.alloc(len);
         this.data.copy(data);
         this.data = data;
         this.data[len - 1] = 1;

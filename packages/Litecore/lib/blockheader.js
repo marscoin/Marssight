@@ -37,8 +37,8 @@ Blockheader.prototype.set = function(obj) {
 Blockheader.prototype.fromJSON = function(json) {
   this.set({
     version: json.version,
-    prevblockidbuf: new Buffer(json.prevblockidbuf, 'hex'),
-    merklerootbuf: new Buffer(json.merklerootbuf, 'hex'),
+    prevblockidbuf: Buffer.from(json.prevblockidbuf, 'hex'),
+    merklerootbuf: Buffer.from(json.merklerootbuf, 'hex'),
     time: json.time,
     bits: json.bits,
     nonce: json.nonce

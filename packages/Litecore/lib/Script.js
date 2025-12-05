@@ -491,7 +491,7 @@ Script.prototype.toString = function(truncate, maxEl) {
 };
 
 Script.prototype.writeOp = function(opcode) {
-  var buf = Buffer(this.buffer.length + 1);
+  var buf = Buffer.alloc(this.buffer.length + 1);
   this.buffer.copy(buf);
   buf.writeUInt8(opcode, this.buffer.length);
 
@@ -526,18 +526,18 @@ function prefixSize(data_length) {
 function encodeLen(data_length) {
   var buf = undefined;
   if (data_length < Opcode.map.OP_PUSHDATA1) {
-    buf = new Buffer(1);
+    buf = Buffer.alloc(1);
     buf.writeUInt8(data_length, 0);
   } else if (data_length <= 0xff) {
-    buf = new Buffer(1 + 1);
+    buf = Buffer.alloc(1 + 1);
     buf.writeUInt8(Opcode.map.OP_PUSHDATA1, 0);
     buf.writeUInt8(data_length, 1);
   } else if (data_length <= 0xffff) {
-    buf = new Buffer(1 + 2);
+    buf = Buffer.alloc(1 + 2);
     buf.writeUInt8(Opcode.map.OP_PUSHDATA2, 0);
     buf.writeUInt16LE(data_length, 1);
   } else {
-    buf = new Buffer(1 + 4);
+    buf = Buffer.alloc(1 + 4);
     buf.writeUInt8(Opcode.map.OP_PUSHDATA4, 0);
     buf.writeUInt32LE(data_length, 1);
   }
@@ -651,7 +651,7 @@ Script.createP2SH = function(scriptHash) {
 Script.fromTestData = function(testData) {
   testData = testData.map(function(chunk) {
     if ("string" === typeof chunk) {
-      return new Buffer(chunk, 'hex');
+      return Buffer.from(chunk, 'hex');
     } else {
       return chunk;
     }
@@ -710,7 +710,7 @@ Script.stringToBuffer = function(s) {
     if (word.length > 2 && word.substring(0, 2) === '0x') {
       // raw hex value
       //console.log('hex value');
-      buf.put(new Buffer(word.substring(2, word.length), 'hex'));
+      buf.put(Buffer.from(word.substring(2, word.length), 'hex'));
     } else {
       var opcode = Opcode.map['OP_' + word] || Opcode.map[word];
       if (typeof opcode !== 'undefined') {
@@ -728,7 +728,7 @@ Script.stringToBuffer = function(s) {
           // string
           //console.log('string');
           word = word.substring(1, word.length - 1);
-          buf.put(Script.chunksToBuffer([new Buffer(word)]));
+          buf.put(Script.chunksToBuffer([Buffer.from(word)]));
         } else {
           throw new Error('Could not parse word "' + word + '" from script "' + s + '"');
         }
