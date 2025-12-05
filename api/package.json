@@ -47,6 +47,7 @@
     "test:pure": "mocha --timeout 10000 test/test.*.pure.js test/test.base58.js test/test.bufferUtils.js test/test.leveldb.js test/test.microtime.js"
   },
   "dependencies": {
+    "Litecore": "file:../packages/Litecore",
     "async": "^3.2.5",
     "bitauth": "^0.1.1",
     "bufferput": "^0.1.3",

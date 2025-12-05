@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "Marssight - Modern Marscoin Blockchain Explorer",
   "private": true,
+  "workspaces": [
+    "frontend",
+    "api",
+    "packages/*"
+  ],
   "scripts": {
-    "install:all": "cd frontend && npm install && cd ../api && npm install",
+    "install:all": "npm install",
     "start:api": "cd api && INSIGHT_NETWORK=livenet node insight.js",
     "start:frontend": "cd frontend && npm run dev",
     "start": "npm run start:api & npm run start:frontend",
