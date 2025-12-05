@@ -14,7 +14,10 @@ logs
 results
 build
 
+# Ignore node_modules except bundled packages
 node_modules
+!packages/*/node_modules
+!packages/*/node_modules/**
 
 # extras
 *.swp
@@ -47,4 +50,3 @@ public/css/main.css
 README.html
 po/*
 !po/*.po
-node_modules
