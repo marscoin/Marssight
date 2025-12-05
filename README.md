@@ -71,43 +71,78 @@ txindex=1
 
 ## Quick Start
 
-### 1. Clone the repository
+### 1. Install Node.js 24+
+
+Make sure you have Node.js 24 or higher installed:
+
+```bash
+# Check your Node.js version
+node --version  # Should be v24.x.x or higher
+
+# If not, install via nvm:
+nvm install 24
+nvm use 24
+```
+
+### 2. Clone the repository
 
 ```bash
 git clone https://github.com/marscoin/Marssight.git
 cd Marssight
 ```
 
-### 2. Install dependencies
+### 3. Install dependencies
+
+The Litecore library is bundled with pure JavaScript modules (no native compilation needed).
 
 ```bash
-# Install all dependencies (frontend + api)
-npm run install:all
+# Install frontend dependencies
+cd frontend
+npm install
 
-# Or install separately:
-cd frontend && npm install
-cd ../api && npm install
+# Install API dependencies
+cd ../api
+npm install
 ```
 
-### 3. Start the backend API
+### 4. Configure your Marscoin node
+
+Make sure your Marscoin Core node is running with RPC enabled. Edit `~/.marscoin/marscoin.conf`:
+
+```conf
+rpcuser=marscoinrpc
+rpcpassword=YOUR_SECURE_PASSWORD
+rpcport=9981
+rpcallowip=127.0.0.1
+txindex=1
+```
+
+Restart marscoin if you made changes:
+```bash
+marscoin-cli stop
+marscoind -daemon
+```
+
+### 5. Start the backend API
 
 ```bash
+cd api
 INSIGHT_NETWORK=livenet \
-BITCOIND_PASS=your_rpc_password \
+BITCOIND_PASS=YOUR_SECURE_PASSWORD \
 INSIGHT_FORCE_RPC_SYNC=true \
-npm run start:api
+node insight.js
 ```
 
-### 4. Start the frontend (in another terminal)
+The API will start syncing with your Marscoin node at http://localhost:4005
+
+### 6. Start the frontend (in another terminal)
 
 ```bash
-npm run start:frontend
+cd frontend
+npm run dev
 ```
 
-### 5. Open your browser
-
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:4005
+Open http://localhost:5173 in your browser.
 
 ## Environment Variables
 
